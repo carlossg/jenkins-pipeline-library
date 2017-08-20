@@ -2,7 +2,8 @@
 def call(Map parameters = [:], body) {
 
   def cloud = parameters.get('cloud', 'kubernetes')
-  def defaultLabel = buildId('maven')
+  // ensure agents are not reused
+  def defaultLabel = currentBuild.projectName + "-" + currentBuild.id
   def label = parameters.get('label', defaultLabel)
   def mavenImage = parameters.get('mavenImage', 'maven:latest')
 
