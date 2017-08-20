@@ -6,6 +6,8 @@ def call(Map parameters = [:], body) {
   def defaultLabel = 'maven-' + currentBuild.projectName + "-" + currentBuild.id
   def label = parameters.get('label', defaultLabel)
   def image = parameters.get('image', 'maven:latest')
+  def volumes = parameters.get('volumes', [])
+  def memory = parameters.get('memory', '1024Mi')
 
   podTemplate(cloud: cloud, label: label,
     containers: [
@@ -13,8 +15,8 @@ def call(Map parameters = [:], body) {
         envVars: [
           envVar(key: '_JAVA_OPTIONS', value:'-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1')
         ],
-        resourceLimitMemory: '1024Mi'])],
-    volumes: []) {
+        resourceLimitMemory: memory])],
+    volumes: volumes) {
 
       body()
   }
